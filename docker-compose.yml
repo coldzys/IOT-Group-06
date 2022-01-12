@@ -1,149 +1,149 @@
 version: "3.8"
 
 services:
-  zookeeper:
-    image: bitnami/zookeeper:3.7.0
-    user: root
-    container_name: zookeeper
-    restart: always
-    networks:
-      cluster-network:
-        ipv4_address: 172.18.0.10
-    hostname: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      - ZOO_PORT_NUMBER=2181
-      - ZOO_SERVER_ID=1
-      - ALLOW_ANONYMOUS_LOGIN=yes
-    volumes:
-      - zookeeper-data:/bitnami/zookeeper
-
-  kafka-01:
-    image: bitnami/kafka:2.8.1
-    user: root
-    container_name: kafka-01
-    restart: always
-    networks:
-      cluster-network:
-        ipv4_address: 172.18.0.11
-    hostname: kafka-01
-    ports:
-      - "29092:29092"
-    environment:
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_LISTENERS=LISTENER_DOCKER_INTERNAL://:19092,LISTENER_DOCKER_EXTERNAL://:29092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=LISTENER_DOCKER_INTERNAL://kafka-01:19092,LISTENER_DOCKER_EXTERNAL://172.18.0.11:29092
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=LISTENER_DOCKER_INTERNAL
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_BROKER_ID=1
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    volumes:
-      - kafka-01-data:/bitnami/kafka
-    depends_on:
-      - zookeeper
-
-  kafka-02:
-    image: bitnami/kafka:2.8.1
-    user: root
-    container_name: kafka-02
-    restart: always
-    networks:
-      cluster-network:
-        ipv4_address: 172.18.0.12
-    hostname: kafka-02
-    ports:
-      - "29093:29093"
-    environment:
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_LISTENERS=LISTENER_DOCKER_INTERNAL://:19093,LISTENER_DOCKER_EXTERNAL://:29093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=LISTENER_DOCKER_INTERNAL://kafka-02:19093,LISTENER_DOCKER_EXTERNAL://172.18.0.12:29093
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=LISTENER_DOCKER_INTERNAL
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_BROKER_ID=2
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    volumes:
-      - kafka-02-data:/bitnami/kafka
-    depends_on:
-      - zookeeper
-
-  kafka-03:
-    image: bitnami/kafka:2.8.1
-    user: root
-    container_name: kafka-03
-    restart: always
-    networks:
-      cluster-network:
-        ipv4_address: 172.18.0.13
-    hostname: kafka-03
-    ports:
-      - "29094:29094"
-    environment:
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_LISTENERS=LISTENER_DOCKER_INTERNAL://:19094,LISTENER_DOCKER_EXTERNAL://:29094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=LISTENER_DOCKER_INTERNAL://kafka-03:19094,LISTENER_DOCKER_EXTERNAL://172.18.0.13:29094
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=LISTENER_DOCKER_INTERNAL
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_BROKER_ID=3
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    volumes:
-      - kafka-03-data:/bitnami/kafka
-    depends_on:
-      - zookeeper
-
-  kafka-manager:
-    image: hlebalbau/kafka-manager:3.0.0.5
-    container_name: kafka-manager
-    restart: always
-    networks:
-      cluster-network:
-        ipv4_address: 172.18.0.14
-    hostname: kafka-manager
-    ports:
-      - "9000:9000"
-    environment:
-      ZK_HOSTS: "zookeeper:2181"
-      APPLICATION_SECRET: "random-secret"
-    command: -Dpidfile.path=/dev/null
-    depends_on:
-      - "zookeeper"
-      - "kafka-01"
-      - "kafka-02"
-      - "kafka-03"
-
-#  elasticsearch:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
-#    container_name: elasticsearch
+#  zookeeper:
+#    image: bitnami/zookeeper:3.7.0
+#    user: root
+#    container_name: zookeeper
 #    restart: always
 #    networks:
 #      cluster-network:
-#        ipv4_address: 172.18.0.20
-#    hostname: elasticsearch
+#        ipv4_address: 172.18.0.10
+#    hostname: zookeeper
+#    ports:
+#      - "2181:2181"
 #    environment:
-#      - xpack.security.enabled=false
-#      - discovery.type=single-node
-#      - bootstrap.memory_lock=true
-#      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+#      - ZOO_PORT_NUMBER=2181
+#      - ZOO_SERVER_ID=1
+#      - ALLOW_ANONYMOUS_LOGIN=yes
 #    volumes:
-#      - elastic-data:/usr/share/elasticsearch/data
-#    ports:
-#      - "9200:9200"
-#
-#  kibana:
-#    image: docker.elastic.co/kibana/kibana:7.16.2
-#    container_name: kibana
+#      - zookeeper-data:/bitnami/zookeeper
+
+#  kafka-01:
+#    image: bitnami/kafka:2.8.1
+#    user: root
+#    container_name: kafka-01
 #    restart: always
 #    networks:
 #      cluster-network:
-#        ipv4_address: 172.18.0.21
-#    hostname: kibana
-#    environment:
-#      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-#      - SERVER_PUBLICBASEURL=http://kibana:5601
+#        ipv4_address: 172.18.0.11
+#    hostname: kafka-01
 #    ports:
-#      - "5601:5601"
+#      - "29092:29092"
+#    environment:
+#      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+#      - KAFKA_CFG_LISTENERS=LISTENER_DOCKER_INTERNAL://:19092,LISTENER_DOCKER_EXTERNAL://:29092
+#      - KAFKA_CFG_ADVERTISED_LISTENERS=LISTENER_DOCKER_INTERNAL://kafka-01:19092,LISTENER_DOCKER_EXTERNAL://172.18.0.11:29092
+#      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=LISTENER_DOCKER_INTERNAL
+#      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+#      - KAFKA_CFG_BROKER_ID=1
+#      - ALLOW_PLAINTEXT_LISTENER=yes
+#    volumes:
+#      - kafka-01-data:/bitnami/kafka
 #    depends_on:
-#      - elasticsearch
+#      - zookeeper
+
+#  kafka-02:
+#    image: bitnami/kafka:2.8.1
+#    user: root
+#    container_name: kafka-02
+#    restart: always
+#    networks:
+#      cluster-network:
+#        ipv4_address: 172.18.0.12
+#    hostname: kafka-02
+#    ports:
+#      - "29093:29093"
+#    environment:
+#      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+#      - KAFKA_CFG_LISTENERS=LISTENER_DOCKER_INTERNAL://:19093,LISTENER_DOCKER_EXTERNAL://:29093
+#      - KAFKA_CFG_ADVERTISED_LISTENERS=LISTENER_DOCKER_INTERNAL://kafka-02:19093,LISTENER_DOCKER_EXTERNAL://172.18.0.12:29093
+#      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=LISTENER_DOCKER_INTERNAL
+#      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+#      - KAFKA_CFG_BROKER_ID=2
+#      - ALLOW_PLAINTEXT_LISTENER=yes
+#    volumes:
+#      - kafka-02-data:/bitnami/kafka
+#    depends_on:
+#      - zookeeper
+
+#  kafka-03:
+#    image: bitnami/kafka:2.8.1
+#    user: root
+#    container_name: kafka-03
+#    restart: always
+#    networks:
+#      cluster-network:
+#        ipv4_address: 172.18.0.13
+#    hostname: kafka-03
+#    ports:
+#      - "29094:29094"
+#    environment:
+#      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+#      - KAFKA_CFG_LISTENERS=LISTENER_DOCKER_INTERNAL://:19094,LISTENER_DOCKER_EXTERNAL://:29094
+#      - KAFKA_CFG_ADVERTISED_LISTENERS=LISTENER_DOCKER_INTERNAL://kafka-03:19094,LISTENER_DOCKER_EXTERNAL://172.18.0.13:29094
+#      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=LISTENER_DOCKER_INTERNAL
+#      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+#      - KAFKA_CFG_BROKER_ID=3
+#      - ALLOW_PLAINTEXT_LISTENER=yes
+#    volumes:
+#      - kafka-03-data:/bitnami/kafka
+#    depends_on:
+#      - zookeeper
+
+#  kafka-manager:
+#    image: hlebalbau/kafka-manager:3.0.0.5
+#    container_name: kafka-manager
+#    restart: always
+#    networks:
+#      cluster-network:
+#        ipv4_address: 172.18.0.14
+#    hostname: kafka-manager
+#    ports:
+#      - "9000:9000"
+#    environment:
+#      ZK_HOSTS: "zookeeper:2181"
+#      APPLICATION_SECRET: "random-secret"
+#    command: -Dpidfile.path=/dev/null
+#    depends_on:
+#      - "zookeeper"
+#      - "kafka-01"
+#      - "kafka-02"
+#      - "kafka-03"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+    container_name: elasticsearch
+    restart: always
+    networks:
+      cluster-network:
+        ipv4_address: 172.18.0.20
+    hostname: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.16.2
+    container_name: kibana
+    restart: always
+    networks:
+      cluster-network:
+        ipv4_address: 172.18.0.21
+    hostname: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - SERVER_PUBLICBASEURL=http://kibana:5601
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
 
 networks:
   cluster-network:
@@ -156,15 +156,7 @@ networks:
           gateway: 172.18.0.1
 
 volumes:
-  zookeeper-data:
-    name: zookeeper-data
+  elastic-data:
+    name: elastic-data
     driver: local
-  kafka-01-data:
-    name: kafka-01-data
-    driver: local
-  kafka-02-data:
-    name: kafka-02-data
-    driver: local
-  kafka-03-data:
-    name: kafka-03-data
-    driver: local
+    
