@@ -4,7 +4,8 @@ from paho.mqtt import client as mqtt_client
 import json
 import traceback
 import logging
- 
+from datetime import datetime
+
 broker = 'obe60107-internet-facing-41f559212072570b.elb.us-east-1.amazonaws.com'
 port = 1883
 topic = "iot-group-06"
@@ -16,8 +17,8 @@ password = 'quannv'
 
 elastic = Elasticsearch()
 
-def send_data(document, index="iot-group-06"):
-  key = str(document["Id"])
+def send_data(document, index="iot-data"):
+  key = str(document["time"])
   elastic.index(index=index, id=key, document=document)
 
 def connect_mqtt() -> mqtt_client:
@@ -36,9 +37,10 @@ def connect_mqtt() -> mqtt_client:
 
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, message):
-        document = str(message.payload.decode("utf-8"))
-        if document != "None" and document != "":
+        document = str(message.payload.decode("utf-8")).replace("\'", "\"")
+        if document != "Conection from ESP8266 established":
             document = json.loads(document)
+            document["time"] = datetime.now().strftime("%H:%M:%S %m-%d-%Y")
             send_data(document)
         print(document)
 
@@ -57,4 +59,4 @@ if __name__ == '__main__':
         run()
     except Exception as e:
         logging.error(traceback.format_exc())
-        
+
